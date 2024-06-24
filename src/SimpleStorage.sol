@@ -2,8 +2,8 @@
 pragma solidity ^0.8.13;
 
 contract SimpleStorage {
-    uint256 private storedValue;
-    uint256 private MAX_StoredValue = 3;
+    uint256 public storedValue;
+    uint256 public MAX_StoredValue = 3;
 
     event ValueChanged(uint256 newValue);
 
