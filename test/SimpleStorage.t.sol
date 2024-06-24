@@ -1,19 +1,30 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-import {Test, console} from "forge-std/Test.sol";
 import {SimpleStorage} from "../src/SimpleStorage.sol";
+import {Test} from "forge-std/Test.sol";
+import {StdInvariant} from "forge-std/StdInvariant.sol";
 
-contract SimpleStorageTest is Test {
+contract MyContractTest is StdInvariant, Test {
     SimpleStorage simpleStorage;
 
     function setUp() public {
         simpleStorage = new SimpleStorage();
+        targetContract(address(simpleStorage));
     }
 
-    function testisAlwayslessthanMax() public {
-        uint256 value = 5;
-        simpleStorage.store(value);
-        assert(simpleStorage.storedValue() < simpleStorage.MAX_StoredValue());
+    function testIsAlwaysZeroUnit() public {
+        uint256 data = 0;
+        simpleStorage.doStuff(data);
+        assert(simpleStorage.shouldAlwaysBeZero() == 0);
+    }
+
+    function testIsAlwaysZeroFuzz(uint256 randomData) public {
+        simpleStorage.doStuff(randomData);
+        assert(simpleStorage.shouldAlwaysBeZero() == 0);
+    }
+
+    function invariant_testAlwaysReturnsZero() public {
+        assert(simpleStorage.shouldAlwaysBeZero() == 0);
     }
 }
