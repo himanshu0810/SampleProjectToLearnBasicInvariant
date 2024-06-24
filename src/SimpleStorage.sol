@@ -3,12 +3,20 @@ pragma solidity ^0.8.13;
 
 contract SimpleStorage {
     uint256 private storedValue;
+    uint256 private MAX_StoredValue = 3;
 
     event ValueChanged(uint256 newValue);
 
     function store(uint256 value) public {
-        require(value < 10, "Stored value should always be less than 10");
-        storedValue = value; 
+        require(value <= MAX_StoredValue, "Stored value should always be less than 3");
+
+        if (value == storedValue) {
+            reset(); // Stored value should always be less than Max value, else reset to zero
+        }
+        else{
+            storedValue = value;
+        }
+
         emit ValueChanged(value);
     }
 
@@ -17,8 +25,13 @@ contract SimpleStorage {
     }
 
     function increment() public {
-        require(storedValue < storedValue + 1, "Stored value should always be less than 10");
+        require(storedValue < MAX_StoredValue + 1, "Stored value should always be less than max Stored Value");
         storedValue += 2; // Bug: incrementing by 2 instead of 1
+
+        if (storedValue == MAX_StoredValue) {
+            reset();
+        }
+
         emit ValueChanged(storedValue);
     }
 
